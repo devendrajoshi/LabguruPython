@@ -25,14 +25,14 @@ class Response(object):
         return dict(filter(lambda x: x[0] not in used_fields and x[1] is not None, self.__dict__.items()))
 
     def _add(self, endpoint, **kwargs):
-        url = api.normalise(endpoint)
+        url = api.normalise(endpoint, base=self.url)
         data = filter_none(kwargs)
         data['token'] = self.token
 
         return api.request(url, data=data)
 
     def _get_or_update(self, endpoint, id, method='GET', **kwargs):
-        url = api.normalise(endpoint.format(id=id))
+        url = api.normalise(endpoint.format(id=id), base=self.url)
         data = filter_none(kwargs)
         data['token'] = self.token
         try:
@@ -41,9 +41,11 @@ class Response(object):
             raise NotFoundException('{name} {id} does not exist'.format(name=self.__class__, id=id))
 
     def find(self, endpoint, **kwargs):
-        url = api.normalise(endpoint)
+        url = api.normalise(endpoint, base=self.url)
         data = filter_none(kwargs)
         data['token'] = self.token
+        if 'page_num' in data:
+            data['page'] = data['page_num']
         return api.request(url, method='GET', data=data)
 
     def __str__(self):
@@ -51,6 +53,5 @@ class Response(object):
 
 
 class Session(Response):
-    def __init__(self, token, url, admin, orders, account_id, account_name, environment):
-        Response.__init__(self, token=token, url=url, admin=admin, orders=orders, account_id=account_id, account_name=account_name,
-                          environment=environment)
+    def __init__(self, token, url):
+        Response.__init__(self, token=token, url=url)
