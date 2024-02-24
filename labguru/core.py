@@ -5,6 +5,7 @@ from . import api
 from .error import UnAuthorizeException
 from .project import Project, Folder, Experiment, Procedure, Element
 from .datasets import Datasets
+from .protocol import Protocol
 from .inventory import InventoryItem, Stock
 from .response import Session
 from .validation import validate_required_fields, validate_names
@@ -272,3 +273,7 @@ class Labguru(object):
                        name=dataset_name,
                        id=dataset_id,
                        data=data, **kwargs).register()
+
+    #Protocols API
+    def list_protocols(self, page_num):
+        return Protocol(token=self.session.token, url=self.session.url).list(page_num=page_num)
