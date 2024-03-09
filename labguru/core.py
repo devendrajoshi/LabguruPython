@@ -130,6 +130,9 @@ class Labguru(object):
         validate_required_fields(action='update section', section_id=section_id)
         return Procedure(token=self.session.token, url=self.session.url, id=section_id, name=name, **kwargs).update()
 
+    def list_experiment_elements(self, experiment_id, page_num):
+        return Element(token=self.session.token, url=self.session.url, experiment_id=experiment_id).list_by_experiment()
+    
     def list_experiment_procedures(self, experiment_id=None, page_num=None):
         if experiment_id is not None:
             experiment_procedures = self.get_experiment(experiment_id=experiment_id).experiment_procedures

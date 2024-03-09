@@ -114,6 +114,13 @@ class Element(Project):
             return [self.__class__(token=self.token, **item) for item in response]
         else:
             return []
+        
+    def list_by_experiment(self):
+        response = self._get_or_update(endpoint=self.specific_endpoint_type, id=self.experiment_id)
+        if isinstance(response, list):
+            return [self.__class__(token=self.token, **item) for item in response]
+        else:
+            return []
 
     def get_data(self):
         if self.element_type == 'form':
